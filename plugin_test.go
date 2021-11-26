@@ -33,15 +33,16 @@ func TestPlugin_sshTransfer(t *testing.T) {
 			Port:     port,
 		},
 		Transfer: SshTransfer{
-			Source:         strings.Split(os.Getenv("source"), ","),
-			Target:         strings.Split(os.Getenv("target"), ","),
-			RemovePrefix:   strings.Split(os.Getenv("removePrefix"), ","),
-			CleanRemote:    cleanRemote,
+			Source:       strings.Split(os.Getenv("source"), ","),
+			Target:       strings.Split(os.Getenv("target"), ","),
+			RemovePrefix: strings.Split(os.Getenv("removePrefix"), ","),
+			CleanRemote:  cleanRemote,
+		},
+		Command: Commands{
 			CommandTimeout: 10 * time.Minute,
 		},
 	}
-	plugin.Exec()
-	err := plugin.sshTransfer()
+	err := plugin.Exec()
 	if err != nil {
 		t.Errorf("error:%s", err.Error())
 	}

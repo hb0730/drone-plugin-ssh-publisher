@@ -27,6 +27,13 @@ type Plugin struct {
 	Writer    io.Writer
 	Host      Host
 	Transfer  SshTransfer
+	Command   Commands
+}
+
+type Commands struct {
+	Commands       []string
+	CommandTimeout time.Duration
+	Command        []string
 }
 
 type fileList struct {
@@ -86,12 +93,10 @@ type Host struct {
 }
 
 type SshTransfer struct {
-	Target         []string
-	Source         []string
-	RemovePrefix   []string
-	CleanRemote    bool
-	CommandTimeout time.Duration
-	Command        []string
+	Target       []string
+	Source       []string
+	RemovePrefix []string
+	CleanRemote  bool
 
 	destFile string
 }
@@ -116,7 +121,11 @@ func (p *Plugin) Exec() error {
 		Passphrase: p.Host.Passphrase,
 		Timeout:    p.Host.Timeout,
 	}
-	return nil
+	err := p.execTransfer()
+	if err != nil {
+		return err
+	}
+	return p.execCommands()
 }
 func (p *Plugin) log(message ...interface{}) {
 	if p.Writer == nil {
@@ -124,8 +133,12 @@ func (p *Plugin) log(message ...interface{}) {
 	}
 	fmt.Fprintf(p.Writer, "%s: %s", p.Host.Host, fmt.Sprintln(message...))
 }
+func (p *Plugin) execCommands() error {
 
-func (p *Plugin) sshTransfer() error {
+	return nil
+}
+
+func (p *Plugin) execTransfer() error {
 	if len(p.Transfer.Source) == 0 || len(p.Transfer.Target) == 0 {
 		return nil
 	}
@@ -184,7 +197,7 @@ func (p *Plugin) operationTargetDir(target string, errChannel chan error, wg *sy
 	if p.Transfer.CleanRemote {
 		cmd = fmt.Sprintf("rm -rf %s", target)
 		p.log("Remove target folder:", target, " ,command: ", cmd)
-		_, _, _, err := p.sshConfig.Run(cmd, p.Transfer.CommandTimeout)
+		_, _, _, err := p.sshConfig.Run(cmd, p.Command.CommandTimeout)
 		if err != nil {
 			errChannel <- err
 			return
@@ -193,7 +206,7 @@ func (p *Plugin) operationTargetDir(target string, errChannel chan error, wg *sy
 	// mkdir path
 	cmd = fmt.Sprintf("mkdir -p %s", target)
 	p.log("create folder", target, " command:", cmd)
-	_, errStr, _, err := p.sshConfig.Run(cmd, p.Transfer.CommandTimeout)
+	_, errStr, _, err := p.sshConfig.Run(cmd, p.Command.CommandTimeout)
 	if err != nil {
 		errChannel <- err
 	}
@@ -204,7 +217,7 @@ func (p *Plugin) operationTargetDir(target string, errChannel chan error, wg *sy
 	// untar file
 	cmd = fmt.Sprintf("tar -xf %s -C %s", p.Transfer.destFile, target)
 	p.log("untar file", p.Transfer.destFile, " command:", cmd)
-	outStr, errStr, _, err := p.sshConfig.Run(cmd, p.Transfer.CommandTimeout)
+	outStr, errStr, _, err := p.sshConfig.Run(cmd, p.Command.CommandTimeout)
 	if outStr != "" {
 		p.log("output: ", outStr)
 	}
@@ -221,7 +234,7 @@ func (p *Plugin) operationTargetDir(target string, errChannel chan error, wg *sy
 		}
 		cmd = fmt.Sprintf("cd %s \n mv -f %s/* . \n rm -rf %s", target, removePrefix, removePrefix)
 		p.log("remove prefix ", removePrefix, " command: ", cmd)
-		outStr, errStr, _, err = p.sshConfig.Run(cmd, p.Transfer.CommandTimeout)
+		outStr, errStr, _, err = p.sshConfig.Run(cmd, p.Command.CommandTimeout)
 		if outStr != "" {
 			p.log("remove prefix output: ", outStr)
 		}
@@ -239,7 +252,7 @@ func (p *Plugin) operationTargetDir(target string, errChannel chan error, wg *sy
 func (p *Plugin) removeDestFile() error {
 	cmd := fmt.Sprintf("rm -rf %s", p.Transfer.destFile)
 	p.log("remove file", p.Transfer.destFile, " command: ", cmd)
-	_, errStr, _, err := p.sshConfig.Run(cmd, p.Transfer.CommandTimeout)
+	_, errStr, _, err := p.sshConfig.Run(cmd, p.Command.CommandTimeout)
 	if err != nil {
 		return err
 	}
