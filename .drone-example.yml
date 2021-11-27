@@ -15,8 +15,16 @@ steps:
       - go get -v -t -d ./...
       - go build -v -ldflags '-X main.build=${DRONE_BUILD_NUMBER}' -a -o drone-plugin-ssh-publisher
   - name: docker build
+    image: docker
+    volumes:
+      - name: dockersock
+        path: /var/run/docker.sock
     commands:
       - ls
       - docker build -t ssh-pulisher-test .
 
 
+volumes:
+  - name: dockersock
+    host:
+      path: /var/run/docker.sock
