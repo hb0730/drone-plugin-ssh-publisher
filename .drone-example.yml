@@ -27,6 +27,9 @@ steps:
   - name: testing
     image: ssh-pulisher-test
     pull: if-not-exists
+    volumes:
+      - name: dockersock
+        path: /var/run/docker.sock
     settings:
       debug: true
       host:
