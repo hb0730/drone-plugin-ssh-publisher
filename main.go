@@ -68,13 +68,13 @@ func main() {
 			Value:  22,
 		},
 		cli.DurationFlag{
-			Name:   "timeout,t",
+			Name:   "timeout",
 			Usage:  "connection timeout",
 			EnvVar: "PLUGIN_TIMEOUT,SSH_TIMEOUT,TIMEOUT,INPUT_TIMEOUT",
 			Value:  30 * time.Second,
 		},
 		cli.DurationFlag{
-			Name:   "command.timeout,T",
+			Name:   "command.timeout",
 			Usage:  "command timeout",
 			EnvVar: "PLUGIN_COMMAND_TIMEOUT,SSH_COMMAND_TIMEOUT,COMMAND_TIMEOUT,INPUT_COMMAND_TIMEOUT",
 			Value:  10 * time.Minute,
@@ -85,12 +85,12 @@ func main() {
 			EnvVar: "PLUGIN_SCRIPT,SSH_SCRIPT,SCRIPT",
 		},
 		cli.StringSliceFlag{
-			Name:   "target, t",
+			Name:   "target",
 			Usage:  "Target path on the server",
 			EnvVar: "PLUGIN_TARGET,SCP_TARGET,TARGET,INPUT_TARGET",
 		},
 		cli.StringSliceFlag{
-			Name:   "source, s",
+			Name:   "source",
 			Usage:  "scp file list",
 			EnvVar: "PLUGIN_SOURCE,SCP_SOURCE,SOURCE,INPUT_SOURCE",
 		},

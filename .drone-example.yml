@@ -8,7 +8,7 @@ platform:
 
 steps:
   - name: testing
-    image: hb0730/drone-plugin-ssh-publisher:0.0.1-beta
+    image: hb0730/drone-plugin-ssh-publisher:0.0.2-beta
     settings:
       debug: true
       host:
