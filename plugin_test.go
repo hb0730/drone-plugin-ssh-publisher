@@ -39,7 +39,7 @@ func TestPlugin_sshTransfer(t *testing.T) {
 			RemovePrefix: strings.Split(os.Getenv("removePrefix"), ","),
 			CleanRemote:  cleanRemote,
 		},
-		Command: Commands{
+		Command: Command{
 			CommandTimeout: 10 * time.Minute,
 		},
 	}
@@ -67,7 +67,7 @@ func TestPlugin_execCommands(t *testing.T) {
 			RemovePrefix: strings.Split(os.Getenv("removePrefix"), ","),
 			CleanRemote:  cleanRemote,
 		},
-		Command: Commands{
+		Command: Command{
 			CommandTimeout: 10 * time.Minute,
 			Commands:       commands,
 		},

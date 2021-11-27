@@ -24,10 +24,10 @@ type Plugin struct {
 	Writer    io.Writer
 	Host      Host
 	Artifact  Artifacts
-	Command   Commands
+	Command   Command
 }
 
-type Commands struct {
+type Command struct {
 	Commands       []string
 	CommandTimeout time.Duration
 }
