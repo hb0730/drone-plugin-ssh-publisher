@@ -23,6 +23,28 @@ steps:
     commands:
       - ls
       - docker build -t ssh-pulisher-test .
+  - name: testing
+    image: ssh-pulisher-test
+    settings:
+      debug: true
+      host:
+        from_secret: host
+      username:
+        from_secret: username
+      password:
+        from_secret: password
+      port:
+        from_secret: port
+      rm: true
+      source:
+        - ./ssh-pulisher-test
+        - ./*
+      target:
+        - /usr/local/docker/ssh-test
+      script:
+        - cd /usr/local/docker/ssh-test
+        - ls
+
 
 
 volumes:
