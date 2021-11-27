@@ -133,7 +133,7 @@ func (p *Plugin) transferArtifact(target string, errChannel chan error, wg *sync
 		return
 	}
 
-	p.log("untar file ", p.Artifact.tempFile)
+	p.log("[artifact] untar file ", p.Artifact.tempFile)
 
 	outStr, errStr, _, err := p.sshConfig.Run(fmt.Sprintf("tar -xf %s -C %s", p.Artifact.tempFile, target), p.Command.CommandTimeout)
 	if p.Debug {
