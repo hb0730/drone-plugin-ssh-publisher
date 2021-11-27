@@ -11,6 +11,7 @@ steps:
     image: golang:1.16
     environment:
       GO111MODULE: "on"
+      GOPROXY: https://goproxy.cn,direct
     commands:
       - go get -v -t -d ./...
       - go build -v -ldflags '-X main.build=${DRONE_BUILD_NUMBER}' -a -o drone-plugin-ssh-publisher
