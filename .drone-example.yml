@@ -23,6 +23,7 @@ steps:
     commands:
       - ls
       - docker build -t ssh-pulisher-test .
+      - docker images
   - name: testing
     image: ssh-pulisher-test
     settings:
