@@ -7,29 +7,8 @@ platform:
   arch: amd64
 
 steps:
-  - name: golang build
-    image: golang:1.16
-    environment:
-      GO111MODULE: "on"
-      GOPROXY: https://goproxy.cn,direct
-    commands:
-      - go get -v -t -d ./...
-      - go build -v -ldflags '-X main.build=${DRONE_BUILD_NUMBER}' -a -o drone-plugin-ssh-publisher
-  - name: docker build
-    image: docker
-    volumes:
-      - name: dockersock
-        path: /var/run/docker.sock
-    commands:
-      - ls
-      - docker build -t ssh-pulisher-test .
-      - docker images
   - name: testing
-    image: ssh-pulisher-test
-    pull: if-not-exists
-    volumes:
-      - name: dockersock
-        path: /var/run/docker.sock
+    image: hb0730/drone-plugin-ssh-publisher:0.0.1-beta
     settings:
       debug: true
       host:
@@ -49,10 +28,3 @@ steps:
       script:
         - cd /usr/local/docker/ssh-test
         - ls
-
-
-
-volumes:
-  - name: dockersock
-    host:
-      path: /var/run/docker.sock
