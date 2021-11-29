@@ -49,11 +49,11 @@ func (p *Plugin) execCmd(cmd string, errChannel chan error, wg *sync.WaitGroup) 
 				break loop
 			case outline := <-stdoutChan:
 				if len(outline) > 0 {
-					p.log("[command] out ", outline)
+					p.log(outline)
 				}
 			case errline := <-stderrChan:
 				if len(errline) != 0 {
-					p.log("[command] error ", errline)
+					p.log(errline)
 				}
 			case err = <-errChan:
 
